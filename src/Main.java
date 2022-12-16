@@ -1,45 +1,67 @@
 public class Main {
 
     public static void main(String[] args) {
-        Manager manager = new Manager();
+        Managers managers = new Managers();
 
-        manager.newTask("Задача 1", "Описание задачи 1");
-        manager.newTask("Задача 2", "Описание задачи 2");
+        TaskManager inMemoryTaskManager = managers.getDefault();
 
-        manager.newEpic("Эпик 1", "Описание эпика 1");
-        manager.newSubTask("Подзадача 1", "Описание подазадачи 1", 2);
-        manager.newSubTask("Подзадача 2", "Описание подазадачи 2", 2);
+        inMemoryTaskManager.newTask(new Task("Задача 1", "Описание задачи 1", StatusType.NEW));
+        inMemoryTaskManager.newTask(new Task("Задача 2", "Описание задачи 2", StatusType.NEW));
 
-        manager.newEpic("Эпик 2", "Описание эпика 2");
-        manager.newSubTask("Подзадача 3", "Описание подзадачи 3", 5);
+        inMemoryTaskManager.newEpic(new Epic("Эпик 1", "Описание эпика 1", StatusType.NEW));
+        inMemoryTaskManager.newSubTask(new Subtask("Подзадача 1", "Описание подазадачи 1", StatusType.NEW, 2));
+        inMemoryTaskManager.newSubTask(new Subtask("Подзадача 2", "Описание подазадачи 2", StatusType.NEW, 2));
 
-        manager.getAllTasks();
-        manager.getAllSubtasks();
-        manager.getAllEpics();
+        inMemoryTaskManager.newEpic(new Epic("Эпик 2", "Описание эпика 2", StatusType.NEW));
+        inMemoryTaskManager.newSubTask(new Subtask("Подзадача 3", "Описание подазадачи 3", StatusType.NEW, 5));
+
+        System.out.println("Просматриваем различные таски");
+        inMemoryTaskManager.getTask(0);
+        inMemoryTaskManager.getSubtask(4);
+        inMemoryTaskManager.getEpic(2);
+        inMemoryTaskManager.getSubtask(6);
+        inMemoryTaskManager.getEpic(5);
+        inMemoryTaskManager.getEpic(2);
+        inMemoryTaskManager.getSubtask(6);
+        inMemoryTaskManager.getEpic(5);
+        inMemoryTaskManager.getEpic(2);
+        inMemoryTaskManager.getSubtask(6);
+        inMemoryTaskManager.getEpic(5);
+        inMemoryTaskManager.getEpic(2);
+        inMemoryTaskManager.getSubtask(6);
+        inMemoryTaskManager.getEpic(5);
+
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory(inMemoryTaskManager.getHistory());
+
+
+        inMemoryTaskManager.getAllTasks();
+        inMemoryTaskManager.getAllSubtasks();
+        inMemoryTaskManager.getAllEpics();
+
 
         System.out.println("Обновляем подзадачу 2 и выводим ее и эпик");
-        Subtask subtask = new Subtask(4,"Обновленная подзадача 2", "Описание обонвленной подзадачи 2",
-                "DONE", 2);
-        manager.updateSubtask(subtask);
-        manager.getSubtask(4);
-        manager.getEpic(2);
+
+        inMemoryTaskManager.updateSubtask(4, new Subtask("Обновленная подзадача 2", "Описание обонвленной подзадачи 2",
+                StatusType.DONE, 2));
+        inMemoryTaskManager.getSubtask(4);
+        inMemoryTaskManager.getEpic(2);
 
         System.out.println("Удаляем подзадачу 2 и выводим ее эпик");
-        manager.deleteSubtask(4);
-        manager.getEpic(2);
+        inMemoryTaskManager.deleteSubtask(4);
+        inMemoryTaskManager.getEpic(2);
 
         System.out.println("Обновляем подзадачу 3 и выводим ее и эпик");
-        subtask = new Subtask(6, "Обновленная подзадача 3", "Описание обновленной подзадачи 3",
-                "DONE", 5);
-        manager.updateSubtask(subtask);
-        manager.getSubtask(6);
-        manager.getEpic(5);
+        inMemoryTaskManager.updateSubtask(6, new Subtask("Обновленная подзадача 3", "Описание обновленной подзадачи 3",
+                StatusType.DONE, 5));
+        inMemoryTaskManager.getSubtask(6);
+        inMemoryTaskManager.getEpic(5);
 
         System.out.println("Выводим все подзадачи");
-        manager.getAllSubtasks();
+        inMemoryTaskManager.getAllSubtasks();
         System.out.println("Удаляем эпик 1");
-        manager.deleteEpic(2);
+        inMemoryTaskManager.deleteEpic(2);
         System.out.println("Выводим все подзадачи снова");
-        manager.getAllSubtasks();
+        inMemoryTaskManager.getAllSubtasks();
     }
 }
