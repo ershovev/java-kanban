@@ -57,10 +57,6 @@ public interface TaskManager {
 
     StatusType checkSubtaskStatus (int subtaskID);   // проверка статуса сабтаска
 
-    void printWatchedHistory(List<Task> list);
-
-    List<Task> getHistory(); // получить список просмотренных задач
-
-    void checkHistorySize(); // проверить размер и, если необходимо, удалить лишние элементы
+    void printWatchedHistory();
 
 }

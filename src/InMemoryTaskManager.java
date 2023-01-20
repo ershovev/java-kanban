@@ -5,11 +5,14 @@ import java.util.List;
 public class InMemoryTaskManager implements TaskManager {
     protected int idCounter = 0;
 
+    Managers managers = new Managers();
+    HistoryManager inMemoryHistoryManager = managers.getDefaultHistory();
+
     protected HashMap<Integer, Task> tasks = new HashMap<>();
     protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
     protected HashMap<Integer, Epic> epics = new HashMap<>();
 
-    protected List<Task> watchedTasks = new ArrayList<>();
+
 
     @Override
     public void newTask(Task task) {   // создание нового таска
@@ -33,8 +36,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         Task task = tasks.get(taskID);
         printTask(task);
-        watchedTasks.add(task);     // добавляем таск в историю просмотров
-        checkHistorySize();       //вызываем метод проверки размера истории просмотров
+        inMemoryHistoryManager.add(task); // добавляем таск в историю просмотров
     }
 
     @Override
@@ -93,8 +95,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         Subtask subtask = subtasks.get(subtaskID);
         printSubtask(subtask);   // печатаем таск
-        watchedTasks.add(subtask);     // добавляем таск в историю просмотров
-        checkHistorySize();       //вызываем метод проверки размера истории просмотров
+        inMemoryHistoryManager.add(subtask);  // добавляем таск в историю просмотров
     }
 
     @Override
@@ -168,8 +169,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         Epic epic = epics.get(epicID);
         printEpic(epic);            // печатаем эпик
-        watchedTasks.add(epic);     // добавляем таск в историю просмотров
-        checkHistorySize();       //вызываем метод проверки размера истории просмотров
+        inMemoryHistoryManager.add(epic); // добавляем таск в историю просмотров
     }
 
     @Override
@@ -284,8 +284,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void printWatchedHistory(List<Task> list) {    // печать список просмотренных задач
+    public void printWatchedHistory() {    // печать список просмотренных задач
         System.out.println("Последние 10 просмотренных задач:");
+        List<Task> list = inMemoryHistoryManager.getHistory();
         for (Task task : list) {
             if (task instanceof Subtask) {
                 Subtask subtask = (Subtask) task;
@@ -296,18 +297,6 @@ public class InMemoryTaskManager implements TaskManager {
             } else {
                 printTask(task);
             }
-        }
-    }
-
-    @Override
-    public List<Task> getHistory() { //получить список просмотренных задач
-        return watchedTasks;
-    }
-
-    @Override
-    public void checkHistorySize() { // проверить размер и, если необходимо, удалить лишний элемент
-        if (watchedTasks.size() > 10) {
-            watchedTasks.remove(0);
         }
     }
 }

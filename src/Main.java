@@ -32,7 +32,7 @@ public class Main {
         inMemoryTaskManager.getEpic(5);
 
         System.out.println("Выводим историю просмотра");
-        inMemoryTaskManager.printWatchedHistory(inMemoryTaskManager.getHistory());
+        inMemoryTaskManager.printWatchedHistory();
 
 
         inMemoryTaskManager.getAllTasks();
