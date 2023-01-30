@@ -1,5 +1,5 @@
 public class Task {
-    protected int id;
+    protected Integer id;
     protected String name;
     protected String description;
     protected StatusType status;

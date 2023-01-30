@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int idCounter = 0;
@@ -26,6 +25,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (!isTaskExists(id)) {
             return;
         }
+        task.id = id;
         tasks.put(id, task);
     }
 
@@ -59,6 +59,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
         tasks.remove(taskID);
+        inMemoryHistoryManager.removeTaskFromHistory(taskID); // вызов метода удаление таска из истории просмотра
     }
 
     @Override
@@ -82,6 +83,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (!isSubTaskExists(id) || !isEpicExists(subtask.epicID)) {
             return;
         }
+        subtask.id = id;
         subtasks.put(id, subtask);
         Epic epic = epics.get(subtask.epicID);
         epic.status = newEpicStatus(subtask.epicID);
@@ -125,6 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic = epics.get(subtask.epicID);
         epic.status = newEpicStatus(subtask.epicID);
         epics.put(subtask.epicID, epic);
+        inMemoryHistoryManager.removeTaskFromHistory(subtaskID); // вызов метода удаление таска из истории просмотра
     }
 
     @Override
@@ -133,6 +136,7 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(subtask.epicID);
             epic.tasks.remove(subtask.id);
             epics.put(epic.id, epic);
+            inMemoryHistoryManager.removeTaskFromHistory(subtask.id); // вызов метода удаление таска из истории просмотра
         }
         subtasks.clear();
     }
@@ -159,6 +163,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (!isEpicExists(id)) {
             return;
         }
+        epic.id = id;
         epics.put(id, epic);
     }
 
@@ -194,8 +199,10 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(epicID);
         for (int subtasksID : epic.tasks) {
             subtasks.remove(subtasksID);
+            inMemoryHistoryManager.removeTaskFromHistory(subtasksID); // вызов метода удаление таска из истории просмотра
         }
         epics.remove(epicID);
+        inMemoryHistoryManager.removeTaskFromHistory(epicID); // вызов метода удаление таска из истории просмотра
     }
 
     @Override
@@ -203,6 +210,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Epic epic : epics.values()) {
             for (int subtasksID : epic.tasks) {
                 subtasks.remove(subtasksID);
+                inMemoryHistoryManager.removeTaskFromHistory(subtasksID); // вызов метода удаление таска из истории просмотра
             }
         }
         epics.clear();
@@ -284,9 +292,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void printWatchedHistory() {    // печать список просмотренных задач
-        System.out.println("Последние 10 просмотренных задач:");
-        List<Task> list = inMemoryHistoryManager.getHistory();
+    public void printWatchedHistory() {    // печать списка просмотренных задач
+        System.out.println("Последние просмотренные задачи:");
+        ArrayList<Task> list = inMemoryHistoryManager.getHistory();
         for (Task task : list) {
             if (task instanceof Subtask) {
                 Subtask subtask = (Subtask) task;

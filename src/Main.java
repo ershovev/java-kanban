@@ -13,34 +13,88 @@ public class Main {
         inMemoryTaskManager.newSubTask(new Subtask("Подзадача 2", "Описание подазадачи 2", StatusType.NEW, 2));
 
         inMemoryTaskManager.newEpic(new Epic("Эпик 2", "Описание эпика 2", StatusType.NEW));
-        inMemoryTaskManager.newSubTask(new Subtask("Подзадача 3", "Описание подазадачи 3", StatusType.NEW, 5));
+      //  inMemoryTaskManager.newSubTask(new Subtask("Подзадача 3", "Описание подазадачи 3", StatusType.NEW, 5));
 
         System.out.println("Просматриваем различные таски");
         inMemoryTaskManager.getTask(0);
+
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory();
+
         inMemoryTaskManager.getSubtask(4);
+
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory();
+
+        inMemoryTaskManager.getSubtask(3);
+
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory();
+
         inMemoryTaskManager.getEpic(2);
-        inMemoryTaskManager.getSubtask(6);
-        inMemoryTaskManager.getEpic(5);
-        inMemoryTaskManager.getEpic(2);
-        inMemoryTaskManager.getSubtask(6);
-        inMemoryTaskManager.getEpic(5);
-        inMemoryTaskManager.getEpic(2);
-        inMemoryTaskManager.getSubtask(6);
-        inMemoryTaskManager.getEpic(5);
-        inMemoryTaskManager.getEpic(2);
-        inMemoryTaskManager.getSubtask(6);
+
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory();
+
+    //    inMemoryTaskManager.getSubtask(6);
+
         inMemoryTaskManager.getEpic(5);
 
         System.out.println("Выводим историю просмотра");
         inMemoryTaskManager.printWatchedHistory();
 
+        inMemoryTaskManager.getEpic(2);
 
-        inMemoryTaskManager.getAllTasks();
-        inMemoryTaskManager.getAllSubtasks();
-        inMemoryTaskManager.getAllEpics();
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory();
+
+     //   inMemoryTaskManager.getSubtask(6);
+        inMemoryTaskManager.getEpic(5);
+
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory();
+
+        inMemoryTaskManager.getEpic(2);
+
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory();
+
+     //   inMemoryTaskManager.getSubtask(6);
+
+        inMemoryTaskManager.getEpic(5);
+
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory();
+
+        inMemoryTaskManager.getEpic(2);
+
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory();
+
+     //   inMemoryTaskManager.getSubtask(6);
+
+        inMemoryTaskManager.getEpic(5);
+
+        System.out.println("Выводим историю просмотра");
+        inMemoryTaskManager.printWatchedHistory();
+
+        System.out.println("Удаляем таск с ID 0 и снова выводим историю просмотров");
+        inMemoryTaskManager.deleteTask(0);
+        inMemoryTaskManager.printWatchedHistory();
+
+        System.out.println("Удаляем эпик с ID 2 и снова выводим историю просмотров(помимо него должны быть удалены сабтаски с ID 3 и 4)");
+        inMemoryTaskManager.deleteEpic(2);
+        inMemoryTaskManager.printWatchedHistory();
 
 
-        System.out.println("Обновляем подзадачу 2 и выводим ее и эпик");
+
+
+//        inMemoryTaskManager.getAllTasks();
+ //       inMemoryTaskManager.getAllSubtasks();
+ //      inMemoryTaskManager.getAllEpics();
+
+
+    /*    System.out.println("Обновляем подзадачу 2 и выводим ее и эпик");
 
         inMemoryTaskManager.updateSubtask(4, new Subtask("Обновленная подзадача 2", "Описание обонвленной подзадачи 2",
                 StatusType.DONE, 2));
@@ -62,6 +116,6 @@ public class Main {
         System.out.println("Удаляем эпик 1");
         inMemoryTaskManager.deleteEpic(2);
         System.out.println("Выводим все подзадачи снова");
-        inMemoryTaskManager.getAllSubtasks();
+        inMemoryTaskManager.getAllSubtasks(); */
     }
 }

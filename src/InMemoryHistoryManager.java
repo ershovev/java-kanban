@@ -1,25 +1,26 @@
 import java.util.ArrayList;
-import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    protected List<Task> watchedTasks = new ArrayList<>();
+
+    private CustomLinkedList<Task> customLinkedList = new CustomLinkedList<>();
+
 
     @Override
-    public void add(Task task) {
-        watchedTasks.add(task);
-        checkHistorySize();  //вызываем метод проверки размера истории просмотров
+    public void add(Task task) {   // добавление таска в историю просмотров
+        removeTaskFromHistory(task.id);
+        customLinkedList.linkLast(task);
     }
 
     @Override
-    public List<Task> getHistory() { //получить список просмотренных задач
-        return watchedTasks;
+    public ArrayList<Task> getHistory() { // получить список просмотренных задач
+        return customLinkedList.getTasks();
     }
 
     @Override
-    public void checkHistorySize() {
-        if (watchedTasks.size() > 10) {
-            watchedTasks.remove(0);
+    public void removeTaskFromHistory(int id) {    // удаление таска из истории просмотров
+        if (customLinkedList.nodeHashMap.containsKey(id)) {
+            customLinkedList.removeNode(customLinkedList.nodeHashMap.remove(id)); // вырезаем ноду из хэшмапы по айди и посылаем в removeNode для удаления
         }
     }
 }

@@ -1,9 +1,9 @@
-import java.util.List;
+import java.util.ArrayList;
 
 public interface HistoryManager {
     void add(Task task);
 
-    List<Task> getHistory();
+    ArrayList<Task> getHistory(); //получить список просмотренных задач
 
-    void checkHistorySize();  // проверить размер и, если необходимо, удалить лишний элемент
+    void removeTaskFromHistory(int id);
 }
