@@ -2,14 +2,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
-    protected int idCounter = 0;
+    private int idCounter = 0;
 
-    Managers managers = new Managers();
-    HistoryManager inMemoryHistoryManager = managers.getDefaultHistory();
+    private Managers managers = new Managers();
+    private HistoryManager inMemoryHistoryManager = managers.getDefaultHistory();
 
-    protected HashMap<Integer, Task> tasks = new HashMap<>();
-    protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    protected HashMap<Integer, Epic> epics = new HashMap<>();
+    private HashMap<Integer, Task> tasks = new HashMap<>();
+    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private HashMap<Integer, Epic> epics = new HashMap<>();
 
 
 

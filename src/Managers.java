@@ -1,8 +1,8 @@
 public class Managers {
-    public TaskManager getDefault() {
+    protected TaskManager getDefault() {
         return new InMemoryTaskManager();
     }
-    public HistoryManager getDefaultHistory() {
+    protected HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
 }

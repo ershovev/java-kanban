@@ -2,14 +2,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CustomLinkedList<T> {
-    public Node<T> head;
-    public Node<T> tail;
-    public int size = 0;
+    private Node<T> head;
+    private Node<T> tail;
+    private int size = 0;
 
     protected HashMap<Integer, Node> nodeHashMap = new HashMap<>(); // хэшмапа для нод
 
 
-    void linkLast(Task task) {       // добавление ноды в хвост
+    protected void linkLast(Task task) {       // добавление ноды в хвост
         size++;
         CustomLinkedList.Node oldTail = tail;
         CustomLinkedList.Node newNode = new CustomLinkedList.Node(task);
@@ -22,7 +22,7 @@ public class CustomLinkedList<T> {
             oldTail.next = newNode;
     }
 
-    void removeNode(Node node) {     // удаление ноды из линкедлиста
+    protected void removeNode(Node node) {     // удаление ноды из линкедлиста
         if (node.next != null  && node.prev != null)  {
             node.next.prev = node.prev;
             node.prev.next = node.next;
@@ -38,7 +38,7 @@ public class CustomLinkedList<T> {
         size--;
     }
 
-    public ArrayList<Task> getTasks() {           // проход по все нодам для вывода истории
+    protected ArrayList<Task> getTasks() {           // проход по все нодам для вывода истории
         ArrayList<Task> tasks = new ArrayList<>();
         CustomLinkedList.Node n = head;
         while (n != null) {
@@ -49,10 +49,10 @@ public class CustomLinkedList<T> {
     }
 
 
-    class Node<T> {
-        public Task data;
-        public Node<T> next;
-        public Node<T> prev;
+    protected class Node<T> {
+        protected Task data;
+        protected Node<T> next;
+        protected Node<T> prev;
 
         public Node(Task data) {
             this.data = data;
