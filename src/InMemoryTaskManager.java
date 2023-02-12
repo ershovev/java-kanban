@@ -2,14 +2,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int idCounter = 0;
+    protected int idCounter = 0;
 
-    private Managers managers = new Managers();
-    private HistoryManager inMemoryHistoryManager = managers.getDefaultHistory();
+    protected Managers managers = new Managers();
+    protected HistoryManager inMemoryHistoryManager = managers.getDefaultHistory();
 
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
+    protected HashMap<Integer, Task> tasks = new HashMap<>();
+    protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected HashMap<Integer, Epic> epics = new HashMap<>();
 
 
 
@@ -64,6 +64,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {  // удаление всех тасков
+        for (Task task : tasks.values()) {
+            inMemoryHistoryManager.removeTaskFromHistory(task.id); // вызов метода удаление таска из истории просмотра
+        }
         tasks.clear();
     }
 
