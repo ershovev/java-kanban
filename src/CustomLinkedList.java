@@ -60,6 +60,4 @@ public class CustomLinkedList<T> {
             this.prev = null;
         }
     }
-
-
 }

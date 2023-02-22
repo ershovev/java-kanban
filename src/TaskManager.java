@@ -1,4 +1,4 @@
-
+import java.util.HashMap;
 
 public interface TaskManager {
 
@@ -6,11 +6,11 @@ public interface TaskManager {
 
     void updateTask(int id, Task task);   // обновление таска
 
-    void getTask(int taskID);    // получение таска по идентификатору
+    Task getTask(int taskID);    // получение таска по идентификатору
 
     void printTask(Task task);  // печать таска
 
-    void getAllTasks();   // получение списка всех тасков
+    HashMap<Integer, Task> getAllTasks();   // получение списка всех тасков
 
     void deleteTask(int taskID);   // удаление таска
 
@@ -20,10 +20,10 @@ public interface TaskManager {
 
     void updateSubtask(int id, Subtask subtask);    // обновление сабтаска
 
-    void getSubtask(int subtaskID);    // получение сабтаска по идентификатору
+    Subtask getSubtask(int subtaskID);    // получение сабтаска по идентификатору
 
     void printSubtask(Subtask subtask);   // печать сабтаска
-    void getAllSubtasks();  // получение списка всех сабтасков
+    HashMap<Integer, Subtask> getAllSubtasks();  // получение списка всех сабтасков
 
     void deleteSubtask(int subtaskID);   // удаление сабтаска и удаление его id из эпика
 
@@ -35,11 +35,11 @@ public interface TaskManager {
 
     void updateEpic(int id, Epic epic);  // обновление эпика
 
-    void getEpic(int epicID); // получение эпика по идентификатору
+    Epic getEpic(int epicID); // получение эпика по идентификатору
 
     void printEpic(Epic epic); // печать эпика
 
-    void getAllEpics();   // получение списка всех эпиков
+    HashMap<Integer, Epic> getAllEpics();   // получение списка всех эпиков
 
     void deleteEpic(int epicID); // удаление эпика и всех его сабтасков
 
@@ -49,6 +49,12 @@ public interface TaskManager {
 
     StatusType newEpicStatus (int epicID); // проверка статуса сабтасков и возврат нового статуса эпика
 
+    void calculateDurationAndTimeForEpic(int epicID); // расчет продолжительности и времени начала-окончания эпика
+                                                   // на основании его сабтасков
+
+    boolean isTaskOverlaps(Task task);
+
+    void getPrioritizedTasks();   // вызов списка отсортированных по приоритету тасков
     boolean isEpicExists(int epicID);    // проверка существует ли эпик
 
     boolean isSubTaskExists(int subtaskID);   // проверка существует ли сабтаск
@@ -58,5 +64,4 @@ public interface TaskManager {
     StatusType checkSubtaskStatus (int subtaskID);   // проверка статуса сабтаска
 
     void printWatchedHistory();
-
 }
