@@ -1,3 +1,10 @@
+package ru.yandex.practicum;
+
+import ru.yandex.practicum.enums.StatusType;
+import ru.yandex.practicum.taskmanager.FileBackedTasksManager;
+import ru.yandex.practicum.tasktypes.Epic;
+import ru.yandex.practicum.tasktypes.Subtask;
+import ru.yandex.practicum.tasktypes.Task;
 
 public class Main {
 
@@ -10,6 +17,7 @@ public class Main {
 
         fileBackedTasksManager.newTask(new Task("Задача 1", "Описание задачи 1", StatusType.NEW, 30, "2023-03-04T09:00:00"));
         fileBackedTasksManager.newTask(new Task("Задача 2", "Описание задачи 2", StatusType.NEW, 70, "2023-03-02T10:00:00"));
+        fileBackedTasksManager.updateTask(1, new Task("Задача 2", "Описание задачи 2", StatusType.NEW, 70, "2023-03-02T10:20:00"));
 
 
         fileBackedTasksManager.newEpic(new Epic("Эпик 1", "Описание эпика 1", StatusType.NEW));
@@ -21,6 +29,7 @@ public class Main {
         System.out.println("Вызываем различные таски\n");
 
         fileBackedTasksManager.getTask(0);
+        fileBackedTasksManager.getTask(1);
         fileBackedTasksManager.getSubtask(4);
         fileBackedTasksManager.getSubtask(3);
 
@@ -33,7 +42,7 @@ public class Main {
         FileBackedTasksManager fileBackedTasksManager2 = managers.getFileBackedTasksManager();
         try {
             fileBackedTasksManager2.loadFromFile();
-        } catch (FileBackedTasksManager.ManagerSaveException e) {
+        } catch (FileBackedTasksManager.ManagerSaveException | FileBackedTasksManager.ManagerReadTaskException e) {
             System.out.println(e.getMessage());
         }
 
@@ -56,17 +65,17 @@ public class Main {
 
 
 
-/*        TaskManager inMemoryTaskManager = managers.getDefault();
+/*        ru.yandex.practicum.taskmanager.TaskManager inMemoryTaskManager = managers.getDefault();
 
-        inMemoryTaskManager.newTask(new Task("Задача 1", "Описание задачи 1", StatusType.NEW));
-        inMemoryTaskManager.newTask(new Task("Задача 2", "Описание задачи 2", StatusType.NEW));
+        inMemoryTaskManager.newTask(new ru.yandex.practicum.tasktypes.Task("Задача 1", "Описание задачи 1", ru.yandex.practicum.enums.StatusType.NEW));
+        inMemoryTaskManager.newTask(new ru.yandex.practicum.tasktypes.Task("Задача 2", "Описание задачи 2", ru.yandex.practicum.enums.StatusType.NEW));
 
-        inMemoryTaskManager.newEpic(new Epic("Эпик 1", "Описание эпика 1", StatusType.NEW));
-        inMemoryTaskManager.newSubTask(new Subtask("Подзадача 1", "Описание подазадачи 1", StatusType.NEW, 2));
-        inMemoryTaskManager.newSubTask(new Subtask("Подзадача 2", "Описание подазадачи 2", StatusType.NEW, 2));
+        inMemoryTaskManager.newEpic(new ru.yandex.practicum.tasktypes.Epic("Эпик 1", "Описание эпика 1", ru.yandex.practicum.enums.StatusType.NEW));
+        inMemoryTaskManager.newSubTask(new ru.yandex.practicum.tasktypes.Subtask("Подзадача 1", "Описание подазадачи 1", ru.yandex.practicum.enums.StatusType.NEW, 2));
+        inMemoryTaskManager.newSubTask(new ru.yandex.practicum.tasktypes.Subtask("Подзадача 2", "Описание подазадачи 2", ru.yandex.practicum.enums.StatusType.NEW, 2));
 
-        inMemoryTaskManager.newEpic(new Epic("Эпик 2", "Описание эпика 2", StatusType.NEW));
-        //  inMemoryTaskManager.newSubTask(new Subtask("Подзадача 3", "Описание подазадачи 3", StatusType.NEW, 5));
+        inMemoryTaskManager.newEpic(new ru.yandex.practicum.tasktypes.Epic("Эпик 2", "Описание эпика 2", ru.yandex.practicum.enums.StatusType.NEW));
+        //  inMemoryTaskManager.newSubTask(new ru.yandex.practicum.tasktypes.Subtask("Подзадача 3", "Описание подазадачи 3", ru.yandex.practicum.enums.StatusType.NEW, 5));
 
         System.out.println("Просматриваем различные таски");
         inMemoryTaskManager.getTask(0);
@@ -147,8 +156,8 @@ public class Main {
 
     /*    System.out.println("Обновляем подзадачу 2 и выводим ее и эпик");
 
-        inMemoryTaskManager.updateSubtask(4, new Subtask("Обновленная подзадача 2", "Описание обонвленной подзадачи 2",
-                StatusType.DONE, 2));
+        inMemoryTaskManager.updateSubtask(4, new ru.yandex.practicum.tasktypes.Subtask("Обновленная подзадача 2", "Описание обонвленной подзадачи 2",
+                ru.yandex.practicum.enums.StatusType.DONE, 2));
         inMemoryTaskManager.getSubtask(4);
         inMemoryTaskManager.getEpic(2);
 
@@ -157,8 +166,8 @@ public class Main {
         inMemoryTaskManager.getEpic(2);
 
         System.out.println("Обновляем подзадачу 3 и выводим ее и эпик");
-        inMemoryTaskManager.updateSubtask(6, new Subtask("Обновленная подзадача 3", "Описание обновленной подзадачи 3",
-                StatusType.DONE, 5));
+        inMemoryTaskManager.updateSubtask(6, new ru.yandex.practicum.tasktypes.Subtask("Обновленная подзадача 3", "Описание обновленной подзадачи 3",
+                ru.yandex.practicum.enums.StatusType.DONE, 5));
         inMemoryTaskManager.getSubtask(6);
         inMemoryTaskManager.getEpic(5);
 

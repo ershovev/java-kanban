@@ -1,5 +1,11 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.Managers;
+import ru.yandex.practicum.enums.StatusType;
+import ru.yandex.practicum.taskmanager.FileBackedTasksManager;
+import ru.yandex.practicum.tasktypes.Epic;
+import ru.yandex.practicum.tasktypes.Subtask;
+import ru.yandex.practicum.tasktypes.Task;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -34,7 +40,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         FileBackedTasksManager fileBackedTasksManager2 = managers.getFileBackedTasksManager();
         try {
             fileBackedTasksManager2.loadFromFile();
-        } catch (FileBackedTasksManager.ManagerSaveException e) {
+        } catch (FileBackedTasksManager.ManagerSaveException | FileBackedTasksManager.ManagerReadTaskException e) {
             System.out.println(e.getMessage());
         }
 

@@ -1,19 +1,21 @@
+package ru.yandex.practicum.historymanager;
+
+import ru.yandex.practicum.tasktypes.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class CustomLinkedList<T> {
-    private Node<T> head;
-    private Node<T> tail;
-    private int size = 0;
+    protected Node<Task> head;
+    protected Node<Task> tail;
 
-    protected HashMap<Integer, Node> nodeHashMap = new HashMap<>(); // хэшмапа для нод
-
+    protected Map<Integer, Node<Task>> nodeMap = new HashMap<>(); // хэшмапа для нод
 
     protected void linkLast(Task task) {       // добавление ноды в хвост
-        size++;
-        CustomLinkedList.Node oldTail = tail;
-        CustomLinkedList.Node newNode = new CustomLinkedList.Node(task);
-        nodeHashMap.put(task.id, newNode); // добавляем айди задачи и ноду в хэшмапу
+        Node<Task> oldTail = tail;
+        Node<Task> newNode = new Node<>(task);
+        nodeMap.put(task.getId(), newNode); // добавляем айди задачи и ноду в хэшмапу
         newNode.prev = oldTail;
         tail = newNode;
         if (oldTail == null)
@@ -23,7 +25,7 @@ public class CustomLinkedList<T> {
     }
 
     protected void removeNode(Node node) {     // удаление ноды из линкедлиста
-        if (node.next != null  && node.prev != null)  {
+        if (node.next != null && node.prev != null) {
             node.next.prev = node.prev;
             node.prev.next = node.next;
         } else if (node.prev != null) {
@@ -35,26 +37,24 @@ public class CustomLinkedList<T> {
         } else {
             head = null;
         }
-        size--;
     }
 
     protected ArrayList<Task> getTasks() {           // проход по все нодам для вывода истории
         ArrayList<Task> tasks = new ArrayList<>();
-        CustomLinkedList.Node n = head;
+        Node<Task> n = head;
         while (n != null) {
-           tasks.add((Task) n.data);
-           n = n.next;
+            tasks.add((Task) n.data);
+            n = n.next;
         }
         return tasks;
     }
-
 
     protected class Node<T> {
         protected Task data;
         protected Node<T> next;
         protected Node<T> prev;
 
-        public Node(Task data) {
+        protected Node(Task data) {
             this.data = data;
             this.next = null;
             this.prev = null;
