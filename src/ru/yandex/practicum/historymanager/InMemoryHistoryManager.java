@@ -23,8 +23,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void removeTaskFromHistory(int id) {    // удаление таска из истории просмотров
-        if (customLinkedList.nodeMap.containsKey(id)) {
-            customLinkedList.removeNode(customLinkedList.nodeMap.remove(id)); // вырезаем ноду из хэшмапы по айди и посылаем в removeNode для удаления
+        if (customLinkedList.getNodeMap().containsKey(id)) {
+            customLinkedList.removeNode(customLinkedList.getNodeMap().remove(id)); // вырезаем ноду из хэшмапы по айди и посылаем в removeNode для удаления
         }
     }
 }

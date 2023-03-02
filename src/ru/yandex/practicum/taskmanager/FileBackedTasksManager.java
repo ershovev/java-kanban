@@ -18,12 +18,8 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private File file;
-    private final int MINIMUM_TASK_STRING_LENGTH = 5;
-    private final String HEADER_FOR_TASKS_AND_HISTORY_FILE = "id,type,name,status,description,epic,duration,startDateAndTime\n";
-    private final String TASK = "task";
-    private final String SUBTASK = "subtask";
-    private final String EPIC = "epic";
+    private final File file;
+    private static final String HEADER_FOR_TASKS_AND_HISTORY_FILE = "id,type,name,status,description,epic,duration,startDateAndTime\n";
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -36,54 +32,49 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             int idCounterToRestore = -1;  // переменная для восстановления счетчика id тасков
 
             String[] splittedHeaderTasksAndHistory = tasksAndHistory.split("\n");   // разбиваем по строкам
-            String[] splittedTasksAndHistory = Arrays.copyOfRange(splittedHeaderTasksAndHistory, 1, splittedHeaderTasksAndHistory.length); // удаляем первую строку
-            for (String string : splittedTasksAndHistory) {
-                String[] stringSplit = string.split(",");     // разбиваем строки и в зависимости от типа вызываем метод создания таска
-                if (stringSplit.length >= MINIMUM_TASK_STRING_LENGTH) {
-                    switch (stringSplit[1]) {
-                        case "TASK":
-                            super.newTask(taskFromString(stringSplit));
-                            if (idCounterToRestore < taskFromString(stringSplit).getId()) {
-                                idCounterToRestore = taskFromString(stringSplit).getId() + 1;
-                            }
-                            break;
-                        case "EPIC":
-                            super.newEpic(epicFromString(stringSplit));
-                            if (idCounterToRestore < epicFromString(stringSplit).getId()) {
-                                idCounterToRestore = epicFromString(stringSplit).getId() + 1;
-                            }
-                            break;
-                        case "SUBTASK":
-                            super.newSubTask(subtaskFromString(stringSplit));
-                            if (idCounterToRestore < subtaskFromString(stringSplit).getId()) {
-                                idCounterToRestore = subtaskFromString(stringSplit).getId() + 1;
-                            }
-                            break;
-                        default:
-                            try {
-                                int x = parseInt(stringSplit[1]);
-                            } catch (NumberFormatException e) {
-                                super.deleteAllTasks();
-                                super.deleteAllEpics();
-                                throw new ManagerReadTaskException("Неизвестный тип задачи:" + stringSplit[1] + " Задачи не сохранены");
-                            }
-                            break;
-                    }
+            //Сергей, привет! Этот непонятный парсинг был для проверки, что если fields[1] это число, то может быть это мы
+            //добрались до строки с историей. Сейчас понимаю что это так себе решение. Сейчас вроде как сделал решение которое приемлемо.
+            String[] splittedTasks = Arrays.copyOfRange(splittedHeaderTasksAndHistory, 1, splittedHeaderTasksAndHistory.length - 2); // удаляем первую и 2 последние строки (пустую и строку истории)
+
+            for (String string : splittedTasks) {
+                String[] fields = string.split(",");     // разбиваем строки и в зависимости от типа вызываем метод создания таска
+                switch (fields[1]) {
+                    case "TASK":
+                        super.newTask(taskFromString(fields));
+                        if (idCounterToRestore < taskFromString(fields).getId()) {
+                            idCounterToRestore = taskFromString(fields).getId() + 1;
+                        }
+                        break;
+                    case "EPIC":
+                        super.newEpic(epicFromString(fields));
+                        if (idCounterToRestore < epicFromString(fields).getId()) {
+                            idCounterToRestore = epicFromString(fields).getId() + 1;
+                        }
+                        break;
+                    case "SUBTASK":
+                        super.newSubTask(subtaskFromString(fields));
+                        if (idCounterToRestore < subtaskFromString(fields).getId()) {
+                            idCounterToRestore = subtaskFromString(fields).getId() + 1;
+                        }
+                        break;
+                    default:
+                        super.deleteAllTasks();
+                        super.deleteAllEpics();
+                        throw new ManagerReadTaskException("Неизвестный тип задачи: " + fields[1] + ". Задачи не сохранены");
                 }
             }
-            idCounter = idCounterToRestore;
+            setIdCounter(idCounterToRestore);
 
-            String lastString = splittedTasksAndHistory[splittedTasksAndHistory.length - 1];     // берем последнюю строку которая содержит историю просмотров
-            String[] historyTasks = lastString.split(",");
-            if (!TASK.equals(historyTasks[1]) && !SUBTASK.equals(historyTasks[1]) && !EPIC.equals(historyTasks[1])) {
-                List<Integer> history = historyFromString(lastString);  // вызываем метод который возвращает лист с id тасков
+            String historyString = splittedHeaderTasksAndHistory[splittedHeaderTasksAndHistory.length - 1];     // берем последнюю строку которая содержит историю просмотров
+            if (!historyString.equals(" ")) {   // если historyString состоит из пробела, то историю не восстанавливаем
+                List<Integer> history = historyFromString(historyString);  // вызываем метод, который возвращает лист с id тасков
                 for (Integer i : history) {     // проходимся по листу и добавляем таски в историю
-                    if (tasks.containsKey(i)) {
-                        inMemoryHistoryManager.add(tasks.get(i));
-                    } else if (subtasks.containsKey(i)) {
-                        inMemoryHistoryManager.add(subtasks.get(i));
+                    if (getTasks().containsKey(i)) {
+                        inMemoryHistoryManager.add(getTasks().get(i));
+                    } else if (getSubtasks().containsKey(i)) {
+                        inMemoryHistoryManager.add(getSubtasks().get(i));
                     } else {
-                        inMemoryHistoryManager.add(epics.get(i));
+                        inMemoryHistoryManager.add(getEpics().get(i));
                     }
                 }
             }
@@ -114,9 +105,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void deleteTask(int taskID) {
+    public void deleteTask(int taskId) {
         try {
-            super.deleteTask(taskID);
+            super.deleteTask(taskId);
             save();
         } catch (ManagerSaveException e) {
             System.out.println(e.getMessage());
@@ -124,10 +115,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Task getTask(int taskID) {
+    public Task getTask(int taskId) {
         Task task = null;
         try {
-            task = super.getTask(taskID);
+            task = super.getTask(taskId);
             save();
         } catch (ManagerSaveException e) {
             System.out.println(e.getMessage());
@@ -265,17 +256,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             Path path = file.toPath();
             Files.writeString(path, HEADER_FOR_TASKS_AND_HISTORY_FILE);   // добавляем первую строку
 
-            for (var entry : tasks.entrySet()) {               // проходимся по таскам и добавляем их
+            for (var entry : getTasks().entrySet()) {               // проходимся по таскам и добавляем их
                 Task task = entry.getValue();
                 Files.writeString(path, taskToString(task), StandardOpenOption.APPEND);
             }
 
-            for (var entry : epics.entrySet()) {             // проходимся по эпика и добавляем их
+            for (var entry : getEpics().entrySet()) {             // проходимся по эпика и добавляем их
                 Epic epic = entry.getValue();
                 Files.writeString(path, taskToString(epic), StandardOpenOption.APPEND);
             }
 
-            for (var entry : subtasks.entrySet()) {          // проходимся по сабтаскам и добавялем их
+            for (var entry : getSubtasks().entrySet()) {          // проходимся по сабтаскам и добавляем их
                 Subtask subtask = entry.getValue();
                 Files.writeString(path, taskToString(subtask), StandardOpenOption.APPEND);
             }
@@ -304,13 +295,17 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private String historyToString(HistoryManager manager) {  // создание строки из истории просмотров
         List<Task> tasks = manager.getHistory();
         StringBuilder sb = new StringBuilder();
-        sb.append("\n");
+        sb.append("\n ");   // добавляем пробел, чтобы корректно удалялись последние две строки когда хотим получить таски
+                            // при чтении из файла, и при этом история просмотров пуста
         for (Task task : tasks) {
-            if (sb.length() > 1) {
+            if (sb.length() > 2) {
                 sb.append(",").append(task.getId());
             } else {
                 sb.append(task.getId());
             }
+        }
+        if (sb.length() > 2) {         // если что-то из тасков добавилось в историю, то удаляем ранее добавленный пробел
+            sb.deleteCharAt(1);
         }
         return sb.toString();
     }

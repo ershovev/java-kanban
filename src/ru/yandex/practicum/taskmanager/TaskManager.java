@@ -12,13 +12,13 @@ public interface TaskManager {
 
     void updateTask(int id, Task task);   // обновление таска
 
-    Task getTask(int taskID);    // получение таска по идентификатору
+    Task getTask(int taskId);    // получение таска по идентификатору
 
     void printTask(Task task);  // печать таска
 
     Map<Integer, Task> getAllTasks();   // получение списка всех тасков
 
-    void deleteTask(int taskID);   // удаление таска
+    void deleteTask(int taskId);   // удаление таска
 
     void deleteAllTasks();   // удаление всех тасков
 
@@ -52,11 +52,7 @@ public interface TaskManager {
 
     void deleteAllEpics();   // удаление всех эпиков и их сабтасков
 
-
-    boolean isTaskOverlaps(Task task);
-
-    void getPrioritizedTasks();   // вызов списка отсортированных по приоритету тасков
-
+    void printPrioritizedTasks();   // вызов списка отсортированных по приоритету тасков
 
     void printWatchedHistory();
 }

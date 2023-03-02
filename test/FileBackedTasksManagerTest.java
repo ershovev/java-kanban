@@ -51,7 +51,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         fileBackedTasksManager2.getAllTasks();
         fileBackedTasksManager2.getAllEpics();
         fileBackedTasksManager2.getAllSubtasks();
-        fileBackedTasksManager2.getPrioritizedTasks();
+        fileBackedTasksManager2.printPrioritizedTasks();
 
         assertEquals("Последние просмотренные задачи:" + System.lineSeparator() + "ID задачи: 0, Название: Задача 1, Описание: Описание задачи 1, Cтатус: NEW," +
                 " Продолжительность: 0 часов 30 минут, Дата и время начала: 2023-03-04T09:00, Дата и время окончания: 2023-03-04T09:30" + System.lineSeparator() +

@@ -24,6 +24,7 @@ public class Main {
         fileBackedTasksManager.newSubTask(new Subtask("Подзадача 1", "Описание подазадачи 1", StatusType.NEW, 2, 20, "2023-03-03T09:00:00"));
         fileBackedTasksManager.newSubTask(new Subtask("Подзадача 2", "Описание подазадачи 2", StatusType.NEW, 2, 60, "2023-03-03T10:00:00"));
 
+
         fileBackedTasksManager.newTask(new Task("Задача 3", "Описание задачи 3", StatusType.NEW, 70, "2023-03-04T09:31:00"));
 
         System.out.println("Вызываем различные таски\n");
@@ -58,7 +59,7 @@ public class Main {
 
         System.out.println("\nВызываем список отсортированных тасков\n");
 
-        fileBackedTasksManager2.getPrioritizedTasks();
+        fileBackedTasksManager2.printPrioritizedTasks();
 
 
 

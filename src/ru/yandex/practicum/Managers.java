@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 public class Managers {
 
-    File file = Path.of(System.getProperty("user.dir") + "\\" + "tasks.csv").toFile();
+    private final File file = Path.of(System.getProperty("user.dir") + "\\" + "tasks.csv").toFile();
 
     public InMemoryTaskManager getDefault() {
         return new InMemoryTaskManager();

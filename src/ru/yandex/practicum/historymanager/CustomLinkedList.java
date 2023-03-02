@@ -7,10 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CustomLinkedList<T> {
-    protected Node<Task> head;
-    protected Node<Task> tail;
+    private Node<Task> head;
+    private Node<Task> tail;
 
-    protected Map<Integer, Node<Task>> nodeMap = new HashMap<>(); // хэшмапа для нод
+    private Map<Integer, Node<Task>> nodeMap = new HashMap<>(); // хэшмапа для нод
+
+    public Map<Integer, Node<Task>> getNodeMap() {
+        return nodeMap;
+    }
 
     protected void linkLast(Task task) {       // добавление ноды в хвост
         Node<Task> oldTail = tail;

@@ -341,26 +341,13 @@
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
-        taskManager.getPrioritizedTasks();
+        taskManager.printPrioritizedTasks();
 
         assertEquals("Список задач, отсортированных по важности:\n" + System.lineSeparator() + "ID подзадачи: 2, Название: Test addNewTask3, Описание: Test addNewTask3 description, Cтатус: NEW," +
                         " ID Эпика подзадачи: 1, Продолжительность: 0 часов 30 минут, Дата и время начала: 2023-03-06T09:00, Дата и время окончания: 2023-03-06T09:30"
                         + System.lineSeparator() + "ID задачи: 0, Название: Test addNewTask, Описание: Test addNewTask description, Cтатус: NEW, Продолжительность: 0 часов 30 минут," +
                         " Дата и время начала: 2023-03-08T09:00, Дата и время окончания: 2023-03-08T09:30" + System.lineSeparator(),
                 output.toString(), "Вывод не совпадает");
-    }
-
-    @Test
-     void isTaskOverlaps() {
-        Task task = new Task("Test addNewTask", "Test addNewTask description", StatusType.NEW, 30, "2023-03-08T09:00:00");
-        Task task2 = new Task("Test addNewTask", "Test addNewTask description", StatusType.NEW, 30, "2023-03-08T09:20:00");
-        task2.setId(1);
-
-        taskManager.newTask(task);
-
-        boolean isTaskOverlaps = taskManager.isTaskOverlaps(task2);
-
-        assertTrue(isTaskOverlaps, "Проверка пересечения по времени не отработала");
     }
 
     @Test
