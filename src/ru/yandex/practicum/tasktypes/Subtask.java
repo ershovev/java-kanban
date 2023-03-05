@@ -2,6 +2,8 @@ package ru.yandex.practicum.tasktypes;
 
 import ru.yandex.practicum.enums.StatusType;
 
+import java.util.Objects;
+
 public class Subtask extends Task {
 
 
@@ -16,7 +18,22 @@ public class Subtask extends Task {
         return epicId;
     }
 
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (getClass() != o.getClass())
+            return false;
+        Subtask subtask = (Subtask) o;
+
+        return Objects.equals(getId(), subtask.getId())
+                && Objects.equals(getName(), subtask.getName())
+                && Objects.equals(getDescription(), subtask.getDescription())
+                && Objects.equals(getStatus(), subtask.getStatus())
+                && Objects.equals(getDuration(), subtask.getDuration())
+                && Objects.equals(getStartTime(), subtask.getStartTime())
+                && Objects.equals(getEndTime(), subtask.getEndTime());
     }
 }

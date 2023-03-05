@@ -18,15 +18,18 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private final File file;
-    private static final String HEADER_FOR_TASKS_AND_HISTORY_FILE = "id,type,name,status,description,epic,duration,startDateAndTime\n";
+    private File file = null;
+    protected static final String HEADER_FOR_TASKS_AND_HISTORY_FILE = "id,type,name,status,description,epic,duration,startDateAndTime\n";
 
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
 
+    public FileBackedTasksManager() {
+    }
 
-    public void loadFromFile() throws ManagerSaveException, ManagerReadTaskException {
+
+    public void load() throws ManagerSaveException, ManagerReadTaskException {
         try {
             String tasksAndHistory = Files.readString(file.toPath());   //читаем файл
             int idCounterToRestore = -1;  // переменная для восстановления счетчика id тасков
@@ -242,7 +245,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    private List<Integer> historyFromString(String value) {   // метод обработки строки и возврата листа с id тасков истории
+    protected List<Integer> historyFromString(String value) {   // метод обработки строки и возврата листа с id тасков истории
         List<Integer> history = new ArrayList<>();
         String[] historyTasks = value.split(",");
         for (String string : historyTasks) {
@@ -251,7 +254,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return history;
     }
 
-    private void save() throws ManagerSaveException {
+    protected void save() throws ManagerSaveException {
         try {
             Path path = file.toPath();
             Files.writeString(path, HEADER_FOR_TASKS_AND_HISTORY_FILE);   // добавляем первую строку
@@ -277,7 +280,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    private String taskToString(Task task) {   // создание строки из таска
+    protected String taskToString(Task task) {   // создание строки из таска
         String taskString;
         if (task instanceof Subtask) {
             taskString = task.getId() + "," + "SUBTASK" + "," + task.getName() + "," + task.getStatus() + "," + task.getDescription() + "," +
@@ -292,11 +295,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return taskString;
     }
 
-    private String historyToString(HistoryManager manager) {  // создание строки из истории просмотров
+    protected String historyToString(HistoryManager manager) {  // создание строки из истории просмотров
         List<Task> tasks = manager.getHistory();
         StringBuilder sb = new StringBuilder();
         sb.append("\n ");   // добавляем пробел, чтобы корректно удалялись последние две строки когда хотим получить таски
-                            // при чтении из файла, и при этом история просмотров пуста
+        // при чтении из файла, и при этом история просмотров пуста
         for (Task task : tasks) {
             if (sb.length() > 2) {
                 sb.append(",").append(task.getId());
@@ -310,19 +313,19 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return sb.toString();
     }
 
-    private Task taskFromString(String[] value) {     // создание таска из строки
+    protected Task taskFromString(String[] value) {     // создание таска из строки
         Task task = new Task(value[2], value[4], StatusType.valueOf(value[3]), parseInt(value[5]), value[6]);
         task.setId(Integer.parseInt(value[0]));
         return task;
     }
 
-    private Epic epicFromString(String[] value) {    // создание эпика из строки
+    protected Epic epicFromString(String[] value) {    // создание эпика из строки
         Epic epic = new Epic(value[2], value[4], StatusType.valueOf(value[3]));
         epic.setId(Integer.parseInt(value[0]));
         return epic;
     }
 
-    private Subtask subtaskFromString(String[] value) {  // создание сабтаска из строки
+    protected Subtask subtaskFromString(String[] value) {  // создание сабтаска из строки
         Subtask subtask = new Subtask(value[2], value[4], StatusType.valueOf(value[3]), parseInt(value[5]), parseInt(value[6]), value[7]);
         subtask.setId(Integer.parseInt(value[0]));
         return subtask;

@@ -1,30 +1,36 @@
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.Managers;
 import ru.yandex.practicum.enums.StatusType;
+import ru.yandex.practicum.serverclient.KVServer;
 import ru.yandex.practicum.taskmanager.FileBackedTasksManager;
+import ru.yandex.practicum.taskmanager.HttpTaskManager;
 import ru.yandex.practicum.tasktypes.Epic;
 import ru.yandex.practicum.tasktypes.Subtask;
 import ru.yandex.practicum.tasktypes.Task;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
+public class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
+
+    KVServer kvServer;
+    Managers managers;
 
     @BeforeEach
-    public void beforeEach() {
-        Managers managers = new Managers();
-        taskManager = managers.getFileBackedTasksManager();
+    public void beforeEach() throws IOException, InterruptedException {
+        kvServer = new KVServer();
+        kvServer.start();
+        managers = new Managers();
+        taskManager = managers.getDefault("user1");
     }
 
-
     @Test
-    void loadFromFile() {
-        Managers managers = new Managers();
-        taskManager = managers.getFileBackedTasksManager();
+    public void saveAndLoad() throws IOException, InterruptedException {
         taskManager.newTask(new Task("Задача 1", "Описание задачи 1", StatusType.NEW, 30, "2023-03-04T09:00:00"));
         taskManager.newTask(new Task("Задача 2", "Описание задачи 2", StatusType.NEW, 70, "2023-03-02T10:00:00"));
         taskManager.newEpic(new Epic("Эпик 1", "Описание эпика 1", StatusType.NEW));
@@ -37,9 +43,10 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
         taskManager.printWatchedHistory();
 
-        FileBackedTasksManager fileBackedTasksManager2 = managers.getFileBackedTasksManager();
+        taskManager = managers.getDefault("user1");
+
         try {
-            fileBackedTasksManager2.load();
+            taskManager.load();
         } catch (FileBackedTasksManager.ManagerSaveException | FileBackedTasksManager.ManagerReadTaskException e) {
             System.out.println(e.getMessage());
         }
@@ -47,11 +54,11 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
 
-        fileBackedTasksManager2.printWatchedHistory();
-        fileBackedTasksManager2.getAllTasks();
-        fileBackedTasksManager2.getAllEpics();
-        fileBackedTasksManager2.getAllSubtasks();
-        fileBackedTasksManager2.printPrioritizedTasks();
+        taskManager.printWatchedHistory();
+        taskManager.getAllTasks();
+        taskManager.getAllEpics();
+        taskManager.getAllSubtasks();
+        taskManager.printPrioritizedTasks();
 
         assertEquals("Последние просмотренные задачи:" + System.lineSeparator() + "ID задачи: 0, Название: Задача 1, Описание: Описание задачи 1, Cтатус: NEW," +
                         " Продолжительность: 0 часов 30 минут, Дата и время начала: 2023-03-04T09:00, Дата и время окончания: 2023-03-04T09:30" + System.lineSeparator() +
@@ -75,5 +82,10 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
                         " Дата и время окончания: 2023-03-03T11:00" + System.lineSeparator() + "ID задачи: 0, Название: Задача 1, Описание: Описание задачи 1, Cтатус: NEW," +
                         " Продолжительность: 0 часов 30 минут, Дата и время начала: 2023-03-04T09:00, Дата и время окончания: 2023-03-04T09:30" + System.lineSeparator(),
                 output.toString(), "Вывод после загрузки из файла не совпадает");
+    }
+
+    @AfterEach
+    public void afterEach() {
+        kvServer.stop();
     }
 }

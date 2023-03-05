@@ -4,6 +4,7 @@ import ru.yandex.practicum.enums.StatusType;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Task {
     private Integer id;
@@ -28,7 +29,6 @@ public class Task {
         this.description = description;
         this.status = status;
     }
-
 
 
     public Integer getId() {
@@ -77,5 +77,24 @@ public class Task {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (getClass() != o.getClass())
+            return false;
+        Task task = (Task) o;
+
+        return Objects.equals(id, task.id)
+                && Objects.equals(name, task.name)
+                && Objects.equals(description, task.description)
+                && Objects.equals(status, task.status)
+                && Objects.equals(duration, task.duration)
+                && Objects.equals(startTime, task.startTime)
+                && Objects.equals(endTime, task.endTime);
     }
 }

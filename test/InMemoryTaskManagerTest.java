@@ -12,7 +12,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     @BeforeEach
     public void beforeEach() {
         Managers managers = new Managers();
-        taskManager = managers.getDefault();
+        taskManager = managers.getInMemoryTaskManager();
     }
 
     @Test
@@ -41,7 +41,6 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Test
     void prioritizedTasksShouldBeZero() {
-
         assertNotNull(taskManager.getPrioritizedTasks(), "Сет для приоритетных тасков отсутствует");
         assertEquals(0, taskManager.getPrioritizedTasks().size(), "Размер сета для приоритетных тасков не равен нулю");
     }

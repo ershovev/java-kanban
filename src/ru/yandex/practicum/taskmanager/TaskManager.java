@@ -4,7 +4,9 @@ import ru.yandex.practicum.tasktypes.Epic;
 import ru.yandex.practicum.tasktypes.Subtask;
 import ru.yandex.practicum.tasktypes.Task;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface TaskManager {
 
@@ -36,7 +38,7 @@ public interface TaskManager {
 
     void deleteAllSubtasks();      // удаление всех сабтасков и удаление их айди из эпиков
 
-    void getAllSubtasksFromEpic(int epicId);  // получение всех сабтасков определенного эпика
+    Map<Integer, Subtask> getAllSubtasksFromEpic(int epicId);  // получение всех сабтасков определенного эпика
 
     void newEpic(Epic epic);  // создание нового эпика
 
@@ -52,7 +54,7 @@ public interface TaskManager {
 
     void deleteAllEpics();   // удаление всех эпиков и их сабтасков
 
-    void printPrioritizedTasks();   // вызов списка отсортированных по приоритету тасков
+    Set<Task> printPrioritizedTasks();   // вызов списка отсортированных по приоритету тасков
 
-    void printWatchedHistory();
+    List<Task> printWatchedHistory();
 }

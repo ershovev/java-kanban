@@ -130,6 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.remove(tasks.get(task.getId()));
         }
         tasks.clear();
+        System.out.println("Все таски удалены");
     }
 
     @Override
@@ -222,15 +223,19 @@ public class InMemoryTaskManager implements TaskManager {
             prioritizedTasks.remove(subtasks.get(subtask.getId()));
         }
         subtasks.clear();
+        System.out.println("Все сабтаски удалены");
     }
 
     @Override
-    public void getAllSubtasksFromEpic(int epicId) { // получение всех сабтасков определенного эпика
+    public Map<Integer, Subtask> getAllSubtasksFromEpic(int epicId) { // получение всех сабтасков определенного эпика
+        Map<Integer, Subtask> subtasksOfEpic = new HashMap<>();
         Epic epic = epics.get(epicId);
         for (int subtaskId : epic.getSubtaskIds()) {
             Subtask subtask = subtasks.get(subtaskId);
             printSubtask(subtask);
+            subtasksOfEpic.put(subtaskId, subtask);
         }
+        return subtasksOfEpic;
     }
 
     @Override
@@ -305,11 +310,12 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
         epics.clear();
+        System.out.println("Все эпики удалены");
     }
 
 
     @Override
-    public void printPrioritizedTasks() {   // вызов списка отсортированных по приоритету тасков
+    public Set<Task> printPrioritizedTasks() {   // вызов списка отсортированных по приоритету тасков
         System.out.println("Список задач, отсортированных по важности:\n");
         for (Task task : prioritizedTasks) {
             if (task instanceof Subtask) {
@@ -318,11 +324,12 @@ public class InMemoryTaskManager implements TaskManager {
                 printTask(task);
             }
         }
+        return prioritizedTasks;
     }
 
 
     @Override
-    public void printWatchedHistory() {    // печать списка просмотренных задач
+    public List<Task> printWatchedHistory() {    // печать списка просмотренных задач
         System.out.println("Последние просмотренные задачи:");
         List<Task> list = inMemoryHistoryManager.getHistory();
         for (Task task : list) {
@@ -336,6 +343,7 @@ public class InMemoryTaskManager implements TaskManager {
                 printTask(task);
             }
         }
+        return list;
     }
 
     private boolean isTaskOverlaps(Task taskToCheck) {   // метод проверки имеются ли пересекающиеся задачи

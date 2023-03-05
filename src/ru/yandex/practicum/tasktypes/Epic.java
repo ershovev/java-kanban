@@ -4,6 +4,7 @@ import ru.yandex.practicum.enums.StatusType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Epic extends Task {
 
@@ -18,7 +19,19 @@ public class Epic extends Task {
         return subtaskIds;
     }
 
-    public void setSubtaskIds(List<Integer> subtaskIds) {
-        this.subtaskIds = subtaskIds;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null)
+            return false;
+        if (getClass() != o.getClass())
+            return false;
+        Epic epic = (Epic) o;
+
+        return Objects.equals(getId(), epic.getId())
+                && Objects.equals(getName(), epic.getName())
+                && Objects.equals(getDescription(), epic.getDescription())
+                && Objects.equals(getStatus(), epic.getStatus());
     }
 }
