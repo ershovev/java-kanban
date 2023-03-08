@@ -34,4 +34,9 @@ public class Epic extends Task {
                 && Objects.equals(getDescription(), epic.getDescription())
                 && Objects.equals(getStatus(), epic.getStatus());
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription(), getStatus());
+    }
 }

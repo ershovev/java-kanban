@@ -19,7 +19,20 @@ import static java.lang.Integer.parseInt;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private File file = null;
+
     protected static final String HEADER_FOR_TASKS_AND_HISTORY_FILE = "id,type,name,status,description,epic,duration,startDateAndTime\n";
+    private static final int MINIMUM_HISTORY_STRING_LENGTH = 2;
+    private static final int INDEX_OF_SPACE_IN_HISTORY_STRING = 1;
+    private static final int INDEX_OF_ID_IN_TASK_STRING = 0;
+    private static final int INDEX_OF_NAME_IN_TASK_STRING = 2;
+    private static final int INDEX_OF_STATUS_IN_TASK_STRING = 3;
+    private static final int INDEX_OF_DESCRIPTION_IN_TASK_STRING = 4;
+    private static final int INDEX_OF_DURATION_IN_TASK_STRING = 5;
+    private static final int INDEX_OF_START_DATE_AND_TIME_IN_TASK_STRING = 6;
+    private static final int INDEX_OF_EPICID_IN_SUBTASK_STRING = 5;
+    private static final int INDEX_OF_DURATION_IN_SUBTASK_STRING = 6;
+    private static final int INDEX_OF_START_DATE_AND_TIME_IN_SUBTASK_STRING = 7;
+
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -35,8 +48,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             int idCounterToRestore = -1;  // переменная для восстановления счетчика id тасков
 
             String[] splittedHeaderTasksAndHistory = tasksAndHistory.split("\n");   // разбиваем по строкам
-            //Сергей, привет! Этот непонятный парсинг был для проверки, что если fields[1] это число, то может быть это мы
-            //добрались до строки с историей. Сейчас понимаю что это так себе решение. Сейчас вроде как сделал решение которое приемлемо.
             String[] splittedTasks = Arrays.copyOfRange(splittedHeaderTasksAndHistory, 1, splittedHeaderTasksAndHistory.length - 2); // удаляем первую и 2 последние строки (пустую и строку истории)
 
             for (String string : splittedTasks) {
@@ -69,7 +80,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             setIdCounter(idCounterToRestore);
 
             String historyString = splittedHeaderTasksAndHistory[splittedHeaderTasksAndHistory.length - 1];     // берем последнюю строку которая содержит историю просмотров
-            if (!historyString.equals(" ")) {   // если historyString состоит из пробела, то историю не восстанавливаем
+            if (!(" ").equals(historyString)) {   // если historyString состоит из пробела, то историю не восстанавливаем
                 List<Integer> history = historyFromString(historyString);  // вызываем метод, который возвращает лист с id тасков
                 for (Integer i : history) {     // проходимся по листу и добавляем таски в историю
                     if (getTasks().containsKey(i)) {
@@ -301,33 +312,35 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         sb.append("\n ");   // добавляем пробел, чтобы корректно удалялись последние две строки когда хотим получить таски
         // при чтении из файла, и при этом история просмотров пуста
         for (Task task : tasks) {
-            if (sb.length() > 2) {
+            if (sb.length() > MINIMUM_HISTORY_STRING_LENGTH) {
                 sb.append(",").append(task.getId());
             } else {
                 sb.append(task.getId());
             }
         }
-        if (sb.length() > 2) {         // если что-то из тасков добавилось в историю, то удаляем ранее добавленный пробел
-            sb.deleteCharAt(1);
+        if (sb.length() > MINIMUM_HISTORY_STRING_LENGTH) {         // если что-то из тасков добавилось в историю, то удаляем ранее добавленный пробел
+            sb.deleteCharAt(INDEX_OF_SPACE_IN_HISTORY_STRING);
         }
         return sb.toString();
     }
 
     protected Task taskFromString(String[] value) {     // создание таска из строки
-        Task task = new Task(value[2], value[4], StatusType.valueOf(value[3]), parseInt(value[5]), value[6]);
-        task.setId(Integer.parseInt(value[0]));
+        Task task = new Task(value[INDEX_OF_NAME_IN_TASK_STRING], value[INDEX_OF_DESCRIPTION_IN_TASK_STRING], StatusType.valueOf(value[INDEX_OF_STATUS_IN_TASK_STRING]),
+                parseInt(value[INDEX_OF_DURATION_IN_TASK_STRING]), value[INDEX_OF_START_DATE_AND_TIME_IN_TASK_STRING]);
+        task.setId(Integer.parseInt(value[INDEX_OF_ID_IN_TASK_STRING]));
         return task;
     }
 
     protected Epic epicFromString(String[] value) {    // создание эпика из строки
-        Epic epic = new Epic(value[2], value[4], StatusType.valueOf(value[3]));
-        epic.setId(Integer.parseInt(value[0]));
+        Epic epic = new Epic(value[INDEX_OF_NAME_IN_TASK_STRING], value[INDEX_OF_DESCRIPTION_IN_TASK_STRING], StatusType.valueOf(value[INDEX_OF_STATUS_IN_TASK_STRING]));
+        epic.setId(Integer.parseInt(value[INDEX_OF_ID_IN_TASK_STRING]));
         return epic;
     }
 
     protected Subtask subtaskFromString(String[] value) {  // создание сабтаска из строки
-        Subtask subtask = new Subtask(value[2], value[4], StatusType.valueOf(value[3]), parseInt(value[5]), parseInt(value[6]), value[7]);
-        subtask.setId(Integer.parseInt(value[0]));
+        Subtask subtask = new Subtask(value[INDEX_OF_NAME_IN_TASK_STRING], value[INDEX_OF_DESCRIPTION_IN_TASK_STRING], StatusType.valueOf(value[INDEX_OF_STATUS_IN_TASK_STRING]),
+                parseInt(value[INDEX_OF_EPICID_IN_SUBTASK_STRING]), parseInt(value[INDEX_OF_DURATION_IN_SUBTASK_STRING]), value[INDEX_OF_START_DATE_AND_TIME_IN_SUBTASK_STRING]);
+        subtask.setId(Integer.parseInt(value[INDEX_OF_ID_IN_TASK_STRING]));
         return subtask;
     }
 

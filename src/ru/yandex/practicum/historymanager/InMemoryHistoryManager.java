@@ -2,7 +2,7 @@ package ru.yandex.practicum.historymanager;
 
 import ru.yandex.practicum.tasktypes.Task;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
@@ -17,7 +17,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public ArrayList<Task> getHistory() { // получить список просмотренных задач
+    public List<Task> getHistory() { // получить список просмотренных задач
         return customLinkedList.getTasks();
     }
 

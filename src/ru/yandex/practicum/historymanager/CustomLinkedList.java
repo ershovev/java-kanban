@@ -4,6 +4,7 @@ import ru.yandex.practicum.tasktypes.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CustomLinkedList<T> {
@@ -28,7 +29,7 @@ public class CustomLinkedList<T> {
             oldTail.next = newNode;
     }
 
-    protected void removeNode(Node node) {     // удаление ноды из линкедлиста
+    protected void removeNode(Node<Task> node) {     // удаление ноды из линкедлиста
         if (node.next != null && node.prev != null) {
             node.next.prev = node.prev;
             node.prev.next = node.next;
@@ -43,11 +44,11 @@ public class CustomLinkedList<T> {
         }
     }
 
-    protected ArrayList<Task> getTasks() {           // проход по все нодам для вывода истории
-        ArrayList<Task> tasks = new ArrayList<>();
+    protected List<Task> getTasks() {           // проход по все нодам для вывода истории
+        List<Task> tasks = new ArrayList<>();
         Node<Task> n = head;
         while (n != null) {
-            tasks.add((Task) n.data);
+            tasks.add(n.data);
             n = n.next;
         }
         return tasks;

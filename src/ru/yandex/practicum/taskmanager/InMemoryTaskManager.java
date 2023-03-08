@@ -203,7 +203,7 @@ public class InMemoryTaskManager implements TaskManager {
         prioritizedTasks.remove(subtask);
         Epic epic = epics.get(subtask.getEpicId());
         subtasks.remove(subtaskId);
-        epic.getSubtaskIds().remove(epic.getSubtaskIds().indexOf(subtaskId));
+        epic.getSubtaskIds().remove((Integer) subtaskId);
         epics.put(subtask.getEpicId(), epic);
         epic = epics.get(subtask.getEpicId());
         epic.setStatus(calculateEpicStatus(subtask.getEpicId()));
@@ -313,9 +313,8 @@ public class InMemoryTaskManager implements TaskManager {
         System.out.println("Все эпики удалены");
     }
 
-
     @Override
-    public Set<Task> printPrioritizedTasks() {   // вызов списка отсортированных по приоритету тасков
+    public void printPrioritizedTasks() {   // вызов списка отсортированных по приоритету тасков
         System.out.println("Список задач, отсортированных по важности:\n");
         for (Task task : prioritizedTasks) {
             if (task instanceof Subtask) {
@@ -324,12 +323,16 @@ public class InMemoryTaskManager implements TaskManager {
                 printTask(task);
             }
         }
-        return prioritizedTasks;
     }
 
+    @Override
+    public List<Task> getWatchedHistory() {
+        List<Task> historyList = inMemoryHistoryManager.getHistory();
+        return historyList;
+    }
 
     @Override
-    public List<Task> printWatchedHistory() {    // печать списка просмотренных задач
+    public void printWatchedHistory() {    // печать списка просмотренных задач
         System.out.println("Последние просмотренные задачи:");
         List<Task> list = inMemoryHistoryManager.getHistory();
         for (Task task : list) {
@@ -343,7 +346,6 @@ public class InMemoryTaskManager implements TaskManager {
                 printTask(task);
             }
         }
-        return list;
     }
 
     private boolean isTaskOverlaps(Task taskToCheck) {   // метод проверки имеются ли пересекающиеся задачи
@@ -364,7 +366,7 @@ public class InMemoryTaskManager implements TaskManager {
         calculateDurationAndTimeForEpic(epicId);
     }
 
-    protected StatusType calculateEpicStatus(int epicId) { // проверка статуса сабтасков и возврат нового статуса эпика
+    private StatusType calculateEpicStatus(int epicId) { // проверка статуса сабтасков и возврат нового статуса эпика
         Epic epicToCheck = epics.get(epicId);
         int subtasksDone = 0;
         int subtasksNew = 0;

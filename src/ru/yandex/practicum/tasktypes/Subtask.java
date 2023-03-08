@@ -34,6 +34,12 @@ public class Subtask extends Task {
                 && Objects.equals(getStatus(), subtask.getStatus())
                 && Objects.equals(getDuration(), subtask.getDuration())
                 && Objects.equals(getStartTime(), subtask.getStartTime())
-                && Objects.equals(getEndTime(), subtask.getEndTime());
+                && Objects.equals(getEndTime(), subtask.getEndTime())
+                && Objects.equals(getEpicId(), subtask.getEpicId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription(), getStatus(), getDuration(), getStartTime(), getEndTime(), epicId);
     }
 }

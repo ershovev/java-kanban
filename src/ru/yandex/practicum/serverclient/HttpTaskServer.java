@@ -234,7 +234,7 @@ public class HttpTaskServer {
 
             switch (method) {
                 case "GET":
-                    String response = gson.toJson(fileBackedTaskManager.printWatchedHistory());
+                    String response = gson.toJson(fileBackedTaskManager.getWatchedHistory());
                     writeResponse(httpExchange, response, 200);
                     break;
 

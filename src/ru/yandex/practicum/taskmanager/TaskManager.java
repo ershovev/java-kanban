@@ -6,7 +6,6 @@ import ru.yandex.practicum.tasktypes.Task;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface TaskManager {
 
@@ -54,7 +53,9 @@ public interface TaskManager {
 
     void deleteAllEpics();   // удаление всех эпиков и их сабтасков
 
-    Set<Task> printPrioritizedTasks();   // вызов списка отсортированных по приоритету тасков
+    void printPrioritizedTasks(); // печать списка отсортированных по приоритету тасков
 
-    List<Task> printWatchedHistory();
+    List<Task> getWatchedHistory(); // получение истории просмотренных тасков
+
+    void printWatchedHistory();  // печать истории просмотренных тасков
 }

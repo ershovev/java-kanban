@@ -331,7 +331,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    void getPrioritizedTasks() {
+    void printPrioritizedTasks() {
         Task task = new Task("Test addNewTask", "Test addNewTask description", StatusType.NEW, 30, "2023-03-08T09:00:00");
         Epic epic = new Epic("Test addNewTask2", "Test addNewTask2 description", StatusType.NEW);
         Subtask subtask = new Subtask("Test addNewTask3", "Test addNewTask3 description", StatusType.NEW, 1, 30, "2023-03-06T09:00:00");

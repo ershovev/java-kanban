@@ -97,4 +97,9 @@ public class Task {
                 && Objects.equals(startTime, task.startTime)
                 && Objects.equals(endTime, task.endTime);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, status, duration, startTime, endTime);
+    }
 }
