@@ -1,2 +1,2 @@
-# java-kanban
-Repository for homework project.
+# TaskManager
+TaskManager - менеджер задач, работающий через http, с возможностью градации степени важности и статусов задач, сохранением данных и истории просмотров в файл.
